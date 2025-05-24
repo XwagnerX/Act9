@@ -6,6 +6,14 @@ const clientRoutes = require('./routes/clientRoutes');
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Log de configuración
+console.log('Configuración de la base de datos:', {
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  database: process.env.DB_NAME,
+  port: process.env.PORT
+});
+
 // Middleware
 app.use(cors());
 app.use(express.json());
@@ -20,8 +28,11 @@ app.get('/api/ping', (req, res) => {
 
 // Manejo de errores
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: 'Error interno del servidor' });
+  console.error('Error global:', err);
+  res.status(500).json({ 
+    message: 'Error interno del servidor',
+    error: err.message 
+  });
 });
 
 app.listen(port, () => {

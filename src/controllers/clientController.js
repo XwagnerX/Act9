@@ -7,7 +7,11 @@ const clientController = {
       const clients = await Client.findAll();
       res.json(clients);
     } catch (error) {
-      res.status(500).json({ message: 'Error al obtener los clientes' });
+      console.error('Error detallado:', error);
+      res.status(500).json({ 
+        message: 'Error al obtener los clientes',
+        error: error.message 
+      });
     }
   },
 
