@@ -1,0 +1,74 @@
+extends layout
+
+block content
+  .row.mb-4
+    .col-md-6
+      h2 Gestión de Clientes
+    .col-md-6.text-end
+      button.btn.btn-primary(data-bs-toggle="modal", data-bs-target="#clientModal") Nuevo Cliente
+
+  .row.mb-4
+    .col-md-12
+      .card
+        .card-body
+          .row
+            .col-md-6
+              .input-group
+                input#searchInput.form-control(type="text", placeholder="Buscar por destino...")
+                button.btn.btn-outline-secondary(type="button", onclick="searchClients()") Buscar
+            .col-md-6.text-end
+              select#sortSelect.form-select(onchange="sortClients()")
+                option(value="name") Ordenar por nombre
+                option(value="destination") Ordenar por destino
+
+  .row
+    .col-md-12
+      .table-responsive
+        table#clientsTable.table.table-striped
+          thead
+            tr
+              th Nombre
+              th Apellidos
+              th Teléfono
+              th Email
+              th Destino
+              th Acciones
+          tbody
+            each client in clients
+              tr
+                td= client.name
+                td= client.surname
+                td= client.phone
+                td= client.email
+                td= client.travel_destination
+                td
+                  button.btn.btn-sm.btn-warning.me-2(onclick=`editClient(${client.id})`) Editar
+                  button.btn.btn-sm.btn-danger(onclick=`deleteClient(${client.id})`) Eliminar
+
+  #clientModal.modal.fade(tabindex="-1")
+    .modal-dialog
+      .modal-content
+        .modal-header
+          h5#modalTitle.modal-title Nuevo Cliente
+          button.btn-close(type="button", data-bs-dismiss="modal")
+        .modal-body
+          form#clientForm
+            input#clientId(type="hidden")
+            .mb-3
+              label.form-label(for="name") Nombre
+              input#name.form-control(type="text", required)
+            .mb-3
+              label.form-label(for="surname") Apellidos
+              input#surname.form-control(type="text", required)
+            .mb-3
+              label.form-label(for="phone") Teléfono
+              input#phone.form-control(type="tel", required)
+            .mb-3
+              label.form-label(for="email") Email
+              input#email.form-control(type="email", required)
+            .mb-3
+              label.form-label(for="travel_destination") Destino
+              input#travel_destination.form-control(type="text", required)
+        .modal-footer
+          button.btn.btn-secondary(type="button", data-bs-dismiss="modal") Cancelar
+          button.btn.btn-primary(type="submit") Guardar 

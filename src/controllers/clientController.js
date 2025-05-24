@@ -5,13 +5,10 @@ const clientController = {
   async getAllClients(req, res) {
     try {
       const clients = await Client.findAll();
-      res.json(clients);
+      res.json(clients || []);
     } catch (error) {
-      console.error('Error detallado:', error);
-      res.status(500).json({ 
-        message: 'Error al obtener los clientes',
-        error: error.message 
-      });
+      console.error('Error al obtener clientes:', error);
+      res.status(500).json({ error: 'Error al obtener los clientes', clients: [] });
     }
   },
 
@@ -20,11 +17,12 @@ const clientController = {
     try {
       const client = await Client.findById(req.params.id);
       if (!client) {
-        return res.status(404).json({ message: 'Cliente no encontrado' });
+        return res.status(404).json({ error: 'Cliente no encontrado' });
       }
       res.json(client);
     } catch (error) {
-      res.status(500).json({ message: 'Error al obtener el cliente' });
+      console.error('Error al obtener cliente:', error);
+      res.status(500).json({ error: 'Error al obtener el cliente' });
     }
   },
 
@@ -42,36 +40,39 @@ const clientController = {
   // Crear un nuevo cliente
   async createClient(req, res) {
     try {
-      const clientId = await Client.create(req.body);
-      res.status(201).json({ id: clientId, message: 'Cliente creado exitosamente' });
+      const client = await Client.create(req.body);
+      res.status(201).json(client);
     } catch (error) {
-      res.status(500).json({ message: 'Error al crear el cliente' });
+      console.error('Error al crear cliente:', error);
+      res.status(500).json({ error: 'Error al crear el cliente' });
     }
   },
 
   // Actualizar un cliente
   async updateClient(req, res) {
     try {
-      const success = await Client.update(req.params.id, req.body);
-      if (!success) {
-        return res.status(404).json({ message: 'Cliente no encontrado' });
+      const client = await Client.update(req.params.id, req.body);
+      if (!client) {
+        return res.status(404).json({ error: 'Cliente no encontrado' });
       }
-      res.json({ message: 'Cliente actualizado exitosamente' });
+      res.json(client);
     } catch (error) {
-      res.status(500).json({ message: 'Error al actualizar el cliente' });
+      console.error('Error al actualizar cliente:', error);
+      res.status(500).json({ error: 'Error al actualizar el cliente' });
     }
   },
 
   // Eliminar un cliente
   async deleteClient(req, res) {
     try {
-      const success = await Client.delete(req.params.id);
-      if (!success) {
-        return res.status(404).json({ message: 'Cliente no encontrado' });
+      const result = await Client.delete(req.params.id);
+      if (!result) {
+        return res.status(404).json({ error: 'Cliente no encontrado' });
       }
-      res.json({ message: 'Cliente eliminado exitosamente' });
+      res.json({ message: 'Cliente eliminado correctamente' });
     } catch (error) {
-      res.status(500).json({ message: 'Error al eliminar el cliente' });
+      console.error('Error al eliminar cliente:', error);
+      res.status(500).json({ error: 'Error al eliminar el cliente' });
     }
   }
 };
