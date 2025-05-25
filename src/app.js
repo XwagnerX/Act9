@@ -1,6 +1,10 @@
 const express = require('express');
 const path = require('path');
+const { SpeedInsights } = require('@vercel/speed-insights');
 const app = express();
+
+// Configuración de SpeedInsights
+app.use(SpeedInsights());
 
 // Configuración de middleware
 app.use(express.json());
